@@ -1,27 +1,86 @@
 # FourthAssign
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.5.
+1. create 3 components: game-control, odd, even
+2. game control should have 2 buttons start stop
+3. when starting the game, an event should be emitted each second
+4. the eetn should be listenable from outside the component
+5. when stopping the game, no moree events should get emitted, the same should happen for the even component
+6. simply output odd - number or even - number in the two component
+7. style the element holding your output text differently on the component.
 
-## Development server
+created three components.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## ----------------------------
 
-## Code scaffolding
+in game-control component :
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+in html file: add 2 buttons:
 
-## Build
+<button class="btn btn-success" (click)="startGame()">Start</button>
+    <button class="btn btn-danger" (click)="endGame()">stop</button>
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+in ts file:
 
-## Running unit tests
+@Output() intervalRun = new EventEmitter<number>();
+  interval;
+  lastNumber = 0;
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+startGame() {
+    this.interval = setInterval(() => {
+      this.intervalRun.emit(this.lastNumber + 1);
+      this.lastNumber++;
+    }, 1000);
+  }
 
-## Running end-to-end tests
+endGame() {
+    clearInterval(this.interval);
+  }
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## ----------------------------
 
-## Further help
+in odd component:
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+in html file:
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Odd - {{ number }}</p>
+  </div>
+</div>
+
+in ts file
+
+@Input() number: number;
+
+## ----------------------------
+
+in even component:
+
+in html file:
+
+<div class="row">
+  <div class="col-md-12">
+    <p>Even - {{ number }}</p>
+  </div>
+</div>
+
+## ----------------------------
+
+in ts file;
+
+@Input() number: number;
+
+in App.component file:
+
+in ts file:
+
+oddNumbers = [];
+  evenNumbers = [];
+
+onInterRun(runningNumber: number) {
+    if (runningNumber % 2 === 0) {
+      this.evenNumbers.push(runningNumber);
+    } else {
+      this.oddNumbers.push(runningNumber);
+    }
+  }
